@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.5
+ * @version 1.6
  * @author MPI
  */
 
@@ -9,7 +9,9 @@
     var mx = mx || {};
 
     mx.PAGE = "index";
+    mx.RPAGE = "";
     mx.LOGIN = false;
+    mx.CACHE = null;
 
     mx.init = function() {
         $("body").on("click", function(e) {
@@ -42,17 +44,18 @@
                     mx.scorecardHandler(e);
                     break;
             }
-
         });
 
         $("body").on("change", function(e) {
             // handle login-form change
-            if (e.target.nodeName == "INPUT"
+            if (e.target.nodeName == "INPUT" 
                 && (e.target.id == "username" || e.target.id == "password")) {
                 mx.validateLoginInput();
                 return;
             }
         });
+        
+        mx.loadPage(mx.PAGE);
     };
 
     /*
@@ -85,7 +88,13 @@
     };
 
     mx.indexHandler = function(e) {
-        return;
+        if (e.target.nodeName == "BUTTON" && e.target.id == "btn-ireop") {
+            mx.PAGE = "scorecard";
+            mx.loadPage(mx.PAGE);
+        } else if(e.target.nodeName == "BUTTON" && e.target.id == "btn-idown"){
+            mx.PAGE = "events";
+            mx.loadPage(mx.PAGE);
+        }
     };
 
     mx.loginHandler = function(e) {
@@ -102,7 +111,8 @@
                             data = JSON.parse(data);
                             if (data.status == 200) {
                                 mx.LOGIN = true;
-                                mx.PAGE = "index";
+                                mx.PAGE = mx.RPAGE != "" ? mx.RPAGE : "index";
+                                mx.RPAGE = "";
                                 mx.loadPage(mx.PAGE);
                             } else {
                                 mx.LOGIN = false;
@@ -117,10 +127,78 @@
     };
 
     mx.eventsHandler = function(e) {
-        return;
+        if (e.target.nodeName == "BUTTON" && e.target.id == "btn-download") {
+            var select = $("#sel-events")[0];
+            var selectedId = parseInt(select[select.selectedIndex].value);
+            if(selectedId > 0){
+                $({eid:selectedId}).ajax(
+                        "../server/?action=getEvent",
+                        "GET",
+                        function(r, status) {
+                            r = JSON.parse(r);
+                            if (r.status == 200) {
+                                mx.CACHE = r.data;
+                                mx.PAGE = "scorecard";
+                                mx.loadPage(mx.PAGE);
+                            } else if (r.status == 401) {
+                                mx.RPAGE = "events";
+                                mx.PAGE = "login";
+                                mx.loadPage(mx.PAGE);
+                            } else {
+                                alert("error");
+                            }
+                        }, true);
+            }
+        }
     };
 
     mx.scorecardHandler = function(e) {
+        return;
+    };
+    
+    mx.indexLoader = function() {
+        if(mx.CACHE != null){
+            $("#cont-index-reopen").show();
+            $("#cont-index-download").hide();
+        } else{
+            $("#cont-index-reopen").hide();
+            $("#cont-index-download").show();
+        }
+    };
+    
+    mx.loginLoader = function() {
+        $("#username").val("");
+        $("#password").val("");
+        mx.validateLoginInput();
+        return;
+    };
+    
+    mx.eventsLoader = function() {
+        $("#sel-events").html("<option value=\"0\">none</option>");
+        $().ajax(
+                "../server/?action=getEventList",
+                "GET",
+                function(r, status) {
+                    r = JSON.parse(r);
+                    if (r.status == 200) {
+                        var s = "";
+                        for (var i = 0; i < r.data.length; i++) {
+                            s += "<option value=" + r.data[i].id + ">" + r.data[i].name + "</option>";
+                        }
+                        s += "<option value=\"0\">none</option>";
+                        $("#sel-events").html(s);
+                        mx.btnDisable(false, "#btn-download");
+                    } else if (r.status == 401) {
+                        mx.RPAGE = "events";
+                        mx.PAGE = "login";
+                        mx.loadPage(mx.PAGE);
+                    } else {
+                        alert("error");
+                    }
+                }, true);
+    };
+    
+    mx.scorecardLoader = function() {
         return;
     };
 
@@ -132,33 +210,16 @@
         // onload page handler
         switch (page) {
             case "index":
+                mx.indexLoader();
                 break;
             case "login":
+                mx.loginLoader();
                 break;
             case "events":
-                $("#pg-events")[0].innerHTML = "";
-                $().ajax(
-                        "../server/?action=getEventList",
-                        "GET",
-                        function(r, status) {
-                            r = JSON.parse(r);
-                            if (r.status == 200) {
-                                var s = "<select class=\"form-control\">";
-                                for (var i = 0; i < r.data.length; i++) {
-                                    s += "<option>" + r.data[i].name
-                                            + "</option>";
-                                }
-                                s += "</select>";
-                                $("#pg-events").html(s, "append");
-                            } else if (r.status == 401) {
-                                mx.PAGE = "login";
-                                mx.loadPage(mx.PAGE);
-                            } else {
-                                alert("error");
-                            }
-                        }, true);
+                mx.eventsLoader();
                 break;
             case "scorecard":
+                mx.scorecardLoader();
                 break;
         }
     };
@@ -171,6 +232,15 @@
     mx.btnMenuHide = function() {
         $("#navbar").hide();
         $("#navbar").css("visibility", "hidden");
+    };
+    
+    mx.btnDisable = function(isDisabled, selector){
+        if(isDisabled){
+            $(selector).cls("disabled", "remove");
+            $(selector).cls("disabled", "add");
+        } else{
+            $(selector).cls("disabled", "remove");
+        }
     };
 
     mx.styleLoginInput = function(isSuccess, parent) {
@@ -205,6 +275,12 @@
             t = false
         }
 
+        if(t){
+            mx.btnDisable(false, "#btn-login");
+        } else{
+            mx.btnDisable(true, "#btn-login");
+        }
+        
         return t;
     };
 

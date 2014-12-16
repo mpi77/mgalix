@@ -7,7 +7,7 @@
 <meta name="keywords" content="">
 <meta name="author" content="MPi">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/full-bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/custom.css" />
 <script src="js/chibi-min.js"></script>
 <script src="js/spin-min.js"></script>
@@ -36,7 +36,15 @@
 	</nav>
 
 	<div id="pg-index" class="container">
-		<div>index page</div>
+		<h3>Welcome to mGalix</h3>
+		<div id="cont-index-reopen">
+			<p>You have opened event. Would you like to continue with this event?</p>
+			<button type="submit" class="btn btn-primary center-block" id="btn-ireop">Yes &amp; reopen it</button>
+		</div>
+		<div id="cont-index-download">
+			<p>You have not opened event. Would you like to download event list from server?</p>
+			<button type="submit" class="btn btn-primary center-block" id="btn-idown">Yes &amp; download it</button>
+		</div>
 	</div>
 
 	<div id="pg-login" class="container hide">
@@ -56,7 +64,11 @@
 	</div>
 	
 	<div id="pg-events" class="container hide">
-		<div>events</div>
+		<h3>Available events</h3>
+		<div class="spacer-10"></div>
+		<select class="form-control" id="sel-events"></select>
+		<div class="spacer-20"></div>
+		<button type="submit" class="btn btn-primary center-block disabled" id="btn-download">Download &amp; open</button>
 	</div>
 	
 	<div id="pg-scorecard" class="container hide">

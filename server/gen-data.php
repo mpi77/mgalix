@@ -2,7 +2,7 @@
 /**
  * Generate example data.
  *
- * @version 1.1
+ * @version 1.2
  * @author MPI
  * */
 header("Content-Type: text/html; charset=utf-8");
@@ -144,7 +144,7 @@ $r1 = array (
 );
 
 $r2 = array (
-                "id" => 1,
+                "id" => 2,
                 "name" => "Sokolí oko 2015",
                 "station" => null,
                 "ts-start" => "2015-09-07 10:00:00",
