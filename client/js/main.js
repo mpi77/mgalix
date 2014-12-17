@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.9
+ * @version 1.10
  * @author MPI
  */
 
@@ -27,6 +27,12 @@
                 mx.PAGE = e.target.id.substr(3);
                 mx.PAGE = mx.PAGE == "home" ? "index" : mx.PAGE;
                 mx.navbarHandler(mx.PAGE);
+                return;
+            }
+            
+            // handle alert close click
+            if (e.target.nodeName == "DIV" && /^alert/.test(e.target.className)) {
+                $(e.target).hide();
                 return;
             }
 
@@ -147,12 +153,13 @@
                                 mx.saveStorageCache();
                                 mx.PAGE = "scorecard-edit";
                                 mx.loadPage(mx.PAGE);
+                                mx.setAlert("alert-success", "Event saved to local.");
                             } else if (r.status == 401) {
                                 mx.RPAGE = "events";
                                 mx.PAGE = "login";
                                 mx.loadPage(mx.PAGE);
                             } else {
-                                alert("error");
+                                mx.setAlert("alert-danger", "Connection failed.");
                             }
                             mx.stopLoader();
                         }, true);
@@ -174,6 +181,7 @@
             mx.CACHE = null;
             mx.PAGE = "cache-clear";
             mx.loadPage(mx.PAGE);
+            mx.setAlert("alert-success", "Local cache was removed.");
             return;
         }else if (e.target.nodeName == "BUTTON" && (e.target.id == "btn-cc-home" || e.target.id == "btn-cc-index")) {
             mx.PAGE = "index";
@@ -252,7 +260,7 @@
                         mx.PAGE = "login";
                         mx.loadPage(mx.PAGE);
                     } else {
-                        alert("error");
+                        mx.setAlert("alert-danger", "Connection failed.");
                     }
                 }, true);
     };
@@ -279,11 +287,22 @@
      * Tools
      * 
      *  */
+    mx.setAlert = function(className, message){
+        var alertbox = $("#alert-box");
+        alertbox.cls("alert-success", "remove");
+        alertbox.cls("alert-info", "remove");
+        alertbox.cls("alert-warning", "remove");
+        alertbox.cls("alert-danger", "remove");
+        alertbox.cls(className, "add");
+        alertbox.html(message);
+        alertbox.show();
+    };
+    
     mx.saveStorageCache = function(){
         if (typeof(Storage) != "undefined") {
             localStorage.setItem("mxCache", JSON.stringify(mx.CACHE));
         } else {
-            alert("storage not supported");
+            mx.setAlert("alert-danger", "Storage cache not supported.");
         }
     };
     
@@ -291,7 +310,7 @@
         if (typeof(Storage) != "undefined") {
             mx.CACHE = JSON.parse(localStorage.getItem("mxCache"));
         } else {
-            alert("storage not supported");
+            mx.setAlert("alert-danger", "Storage cache not supported.");
         }
     };
     
@@ -299,7 +318,7 @@
         if (typeof(Storage) != "undefined") {
             localStorage.setItem("mxCache", null);
         } else {
-            alert("storage not supported");
+            mx.setAlert("alert-danger", "Storage cache not supported.");
         }
     };
     
