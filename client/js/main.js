@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.6
+ * @version 1.7
  * @author MPI
  */
 
@@ -12,6 +12,7 @@
     mx.RPAGE = "";
     mx.LOGIN = false;
     mx.CACHE = null;
+    mx.SPINNER = null;
 
     mx.init = function() {
         $("body").on("click", function(e) {
@@ -46,7 +47,7 @@
             }
         });
 
-        $("body").on("change", function(e) {
+        $("body").on("keyup", function(e) {
             // handle login-form change
             if (e.target.nodeName == "INPUT" 
                 && (e.target.id == "username" || e.target.id == "password")) {
@@ -57,21 +58,6 @@
         
         mx.loadPage(mx.PAGE);
     };
-
-    /*
-     * var opts = { lines: 13, // The number of lines to draw length: 0, // The
-     * length of each line width: 10, // The line thickness radius: 30, // The
-     * radius of the inner circle corners: 1, // Corner roundness (0..1) rotate:
-     * 0, // The rotation offset direction: 1, // 1: clockwise, -1:
-     * counterclockwise color: '#000', // #rgb or #rrggbb or array of colors
-     * speed: 1, // Rounds per second trail: 60, // Afterglow percentage shadow:
-     * false, // Whether to render a shadow hwaccel: false, // Whether to use
-     * hardware acceleration className: 'spinner', // The CSS class to assign to
-     * the spinner zIndex: 2e9, // The z-index (defaults to 2000000000) top:
-     * '50%', // Top position relative to parent left: '50%' // Left position
-     * relative to parent }; var target = document.getElementById('pg-index');
-     * var spinner = new Spinner(opts).spin(target);
-     */
 
     mx.navbarHandler = function(page) {
         mx.loadPage(page);
@@ -100,6 +86,7 @@
     mx.loginHandler = function(e) {
         if (e.target.nodeName == "BUTTON" && e.target.id == "btn-login") {
             if (mx.validateLoginInput()) {
+                mx.startLoader();
                 var username = $("#username"), password = $("#password");
                 $({
                     username : username.val(),
@@ -121,6 +108,7 @@
                                 mx.styleLoginInput(false,
                                         password[0].parentNode);
                             }
+                            mx.stopLoader();
                         }, true);
             }
         }
@@ -206,7 +194,8 @@
         $("div[id^=pg-]").cls("hide", "remove");
         $("div[id^=pg-]").cls("hide", "add");
         $("#pg-" + page).cls("hide", "remove");
-
+        mx.stopLoader();
+        
         // onload page handler
         switch (page) {
             case "index":
@@ -222,6 +211,39 @@
                 mx.scorecardLoader();
                 break;
         }
+    };
+    
+    mx.startLoader = function(){
+        var loader = $("#loader");
+        if(mx.SPINNER == null){
+            var opts = { 
+                    lines: 13,
+                    length: 0,
+                    width: 10,
+                    radius: 30,
+                    corners: 1,
+                    rotate:0,
+                    direction: 1,
+                    color: "#000",
+                    speed: 1,
+                    trail: 60,
+                    shadow: false,
+                    hwaccel: false,
+                    className: "spinner",
+                    zIndex: 2e9,
+                    top: "50%",
+                    left: "50%"
+            };
+            mx.SPINNER = new Spinner(opts).spin(loader[0]);
+        }
+        loader.show();
+    };
+    
+    mx.stopLoader = function(){
+        var loader = $("#loader");
+        loader.hide();
+        loader.html(" ");
+        mx.SPINNER = null;
     };
 
     mx.btnMenuShow = function() {
