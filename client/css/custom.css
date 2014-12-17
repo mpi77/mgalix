@@ -29,14 +29,15 @@ div[id^=pg-]{
 	display: none;
 	position: absolute;
 	top:0;
-	background-color: #333;
 	min-height: 100%;
 	height: 100%;
 	width: 100%;
 	zIndex: 2e8;
 	zoom: 1;
+	/*
 	filter: alpha(opacity=75);
 	opacity: 0.75;
+	background-color: #777;*/
 }
 
 .req {

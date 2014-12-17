@@ -38,13 +38,15 @@
 
 	<div id="pg-index" class="container">
 		<h3>Welcome to mGalix</h3>
-		<div id="cont-index-reopen">
+		<div id="cont-i-reopen">
 			<p>You have opened event. Would you like to continue with this event?</p>
-			<button type="submit" class="btn btn-primary center-block" id="btn-ireop">Yes &amp; reopen it</button>
+			<div class="spacer-10"></div>
+			<button type="submit" class="btn btn-primary center-block" id="btn-i-reop">Yes &amp; reopen it</button>
 		</div>
-		<div id="cont-index-download">
+		<div id="cont-i-download">
 			<p>You have not opened event. Would you like to download event list from server?</p>
-			<button type="submit" class="btn btn-primary center-block" id="btn-idown">Yes &amp; download it</button>
+			<div class="spacer-10"></div>
+			<button type="submit" class="btn btn-primary center-block" id="btn-i-down">Yes &amp; download it</button>
 		</div>
 	</div>
 
@@ -81,7 +83,19 @@
 	</div>
 	
 	<div id="pg-cache-clear" class="container hide">
-		<div>clear local cache</div>
+		<h3>Clear local cache</h3>
+		<div id="cont-cc-nemtpy">
+			<p>You have saved event in your local cache. Would you like to remove it?</p>
+			<div class="spacer-10"></div>
+			<button type="submit" class="btn btn-danger center-block" id="btn-cc-confirm">Yes &amp; clear cache</button>
+			<div class="spacer-10"></div>
+			<button type="submit" class="btn btn-default center-block" id="btn-cc-home">No &amp; go to index</button>
+		</div>
+		<div id="cont-cc-emtpy">
+			<p>You have not saved event in your local cache.</p>
+			<div class="spacer-10"></div>
+			<button type="submit" class="btn btn-default center-block" id="btn-cc-index">Go to index</button>
+		</div>
 	</div>
 	
 	<div id="loader" class="container"></div>

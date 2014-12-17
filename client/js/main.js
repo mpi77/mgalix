@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.8
+ * @version 1.9
  * @author MPI
  */
 
@@ -62,9 +62,10 @@
             }
         });
         
+        mx.restoreStorageCache();
         mx.loadPage(mx.PAGE);
     };
-
+    
     /* 
      * Navbar menu handlers 
      * 
@@ -88,12 +89,14 @@
      * 
      * */
     mx.indexHandler = function(e) {
-        if (e.target.nodeName == "BUTTON" && e.target.id == "btn-ireop") {
+        if (e.target.nodeName == "BUTTON" && e.target.id == "btn-i-reop") {
             mx.PAGE = "scorecard-edit";
             mx.loadPage(mx.PAGE);
-        } else if(e.target.nodeName == "BUTTON" && e.target.id == "btn-idown"){
+            return;
+        } else if(e.target.nodeName == "BUTTON" && e.target.id == "btn-i-down"){
             mx.PAGE = "events";
             mx.loadPage(mx.PAGE);
+            return;
         }
     };
 
@@ -133,6 +136,7 @@
             var select = $("#sel-events")[0];
             var selectedId = parseInt(select[select.selectedIndex].value);
             if(selectedId > 0){
+                mx.startLoader();
                 $({eid:selectedId}).ajax(
                         "../server/?action=getEvent",
                         "GET",
@@ -140,6 +144,7 @@
                             r = JSON.parse(r);
                             if (r.status == 200) {
                                 mx.CACHE = r.data;
+                                mx.saveStorageCache();
                                 mx.PAGE = "scorecard-edit";
                                 mx.loadPage(mx.PAGE);
                             } else if (r.status == 401) {
@@ -149,6 +154,7 @@
                             } else {
                                 alert("error");
                             }
+                            mx.stopLoader();
                         }, true);
             }
         }
@@ -163,7 +169,17 @@
     };
     
     mx.cacheClearHandler = function(e) {
-        return;
+        if (e.target.nodeName == "BUTTON" && e.target.id == "btn-cc-confirm") {
+            mx.clearStorageCache();
+            mx.CACHE = null;
+            mx.PAGE = "cache-clear";
+            mx.loadPage(mx.PAGE);
+            return;
+        }else if (e.target.nodeName == "BUTTON" && (e.target.id == "btn-cc-home" || e.target.id == "btn-cc-index")) {
+            mx.PAGE = "index";
+            mx.loadPage(mx.PAGE);
+            return;
+        }
     };
     
     /* 
@@ -201,11 +217,11 @@
     
     mx.indexLoader = function() {
         if(mx.CACHE != null){
-            $("#cont-index-reopen").show();
-            $("#cont-index-download").hide();
+            $("#cont-i-reopen").show();
+            $("#cont-i-download").hide();
         } else{
-            $("#cont-index-reopen").hide();
-            $("#cont-index-download").show();
+            $("#cont-i-reopen").hide();
+            $("#cont-i-download").show();
         }
     };
     
@@ -250,13 +266,51 @@
     };
     
     mx.cacheClearLoader = function() {
-        return;
+        if(mx.CACHE != null){
+            $("#cont-cc-nemtpy").show();
+            $("#cont-cc-emtpy").hide();
+        } else{
+            $("#cont-cc-nemtpy").hide();
+            $("#cont-cc-emtpy").show();
+        }
     };
     
     /* 
      * Tools
      * 
      *  */
+    mx.saveStorageCache = function(){
+        if (typeof(Storage) != "undefined") {
+            localStorage.setItem("mxCache", JSON.stringify(mx.CACHE));
+        } else {
+            alert("storage not supported");
+        }
+    };
+    
+    mx.restoreStorageCache = function(){
+        if (typeof(Storage) != "undefined") {
+            mx.CACHE = JSON.parse(localStorage.getItem("mxCache"));
+        } else {
+            alert("storage not supported");
+        }
+    };
+    
+    mx.clearStorageCache = function(){
+        if (typeof(Storage) != "undefined") {
+            localStorage.setItem("mxCache", null);
+        } else {
+            alert("storage not supported");
+        }
+    };
+    
+    mx.isStorageCacheEmpty = function(){
+        if (typeof(Storage) != "undefined" && localStorage.getItem("mxCache") != null) {
+            return false;
+        } else{
+            return true;
+        }
+    };
+    
     mx.startLoader = function(){
         var loader = $("#loader");
         if(mx.SPINNER == null){
@@ -349,6 +403,10 @@
         
         return t;
     };
-
+    
+    /*
+     * Run mx
+     * 
+     * */
     mx.init();
 }());
