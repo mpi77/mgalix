@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.7
+ * @version 1.8
  * @author MPI
  */
 
@@ -41,8 +41,14 @@
                 case "events":
                     mx.eventsHandler(e);
                     break;
-                case "scorecard":
-                    mx.scorecardHandler(e);
+                case "scorecard-edit":
+                    mx.scorecardEditHandler(e);
+                    break;
+                case "scorecard-upload":
+                    mx.scorecardUploadHandler(e);
+                    break;
+                case "cache-clear":
+                    mx.cacheClearHandler(e);
                     break;
             }
         });
@@ -59,6 +65,10 @@
         mx.loadPage(mx.PAGE);
     };
 
+    /* 
+     * Navbar menu handlers 
+     * 
+     * */
     mx.navbarHandler = function(page) {
         mx.loadPage(page);
         mx.btnMenuHide();
@@ -73,9 +83,13 @@
         }
     };
 
+    /* 
+     * Page handlers 
+     * 
+     * */
     mx.indexHandler = function(e) {
         if (e.target.nodeName == "BUTTON" && e.target.id == "btn-ireop") {
-            mx.PAGE = "scorecard";
+            mx.PAGE = "scorecard-edit";
             mx.loadPage(mx.PAGE);
         } else if(e.target.nodeName == "BUTTON" && e.target.id == "btn-idown"){
             mx.PAGE = "events";
@@ -126,7 +140,7 @@
                             r = JSON.parse(r);
                             if (r.status == 200) {
                                 mx.CACHE = r.data;
-                                mx.PAGE = "scorecard";
+                                mx.PAGE = "scorecard-edit";
                                 mx.loadPage(mx.PAGE);
                             } else if (r.status == 401) {
                                 mx.RPAGE = "events";
@@ -140,8 +154,49 @@
         }
     };
 
-    mx.scorecardHandler = function(e) {
+    mx.scorecardEditHandler = function(e) {
         return;
+    };
+    
+    mx.scorecardUploadHandler = function(e) {
+        return;
+    };
+    
+    mx.cacheClearHandler = function(e) {
+        return;
+    };
+    
+    /* 
+     * Page loaders 
+     * 
+     * */
+    mx.loadPage = function(page) {
+        $("div[id^=pg-]").cls("hide", "remove");
+        $("div[id^=pg-]").cls("hide", "add");
+        $("#pg-" + page).cls("hide", "remove");
+        mx.stopLoader();
+        
+        // onload page handler
+        switch (page) {
+            case "index":
+                mx.indexLoader();
+                break;
+            case "login":
+                mx.loginLoader();
+                break;
+            case "events":
+                mx.eventsLoader();
+                break;
+            case "scorecard-edit":
+                mx.scorecardEditLoader();
+                break;
+            case "scorecard-upload":
+                mx.scorecardUploadLoader();
+                break;
+            case "cache-clear":
+                mx.cacheClearLoader();
+                break;
+        }
     };
     
     mx.indexLoader = function() {
@@ -186,33 +241,22 @@
                 }, true);
     };
     
-    mx.scorecardLoader = function() {
+    mx.scorecardEditLoader = function() {
         return;
     };
-
-    mx.loadPage = function(page) {
-        $("div[id^=pg-]").cls("hide", "remove");
-        $("div[id^=pg-]").cls("hide", "add");
-        $("#pg-" + page).cls("hide", "remove");
-        mx.stopLoader();
-        
-        // onload page handler
-        switch (page) {
-            case "index":
-                mx.indexLoader();
-                break;
-            case "login":
-                mx.loginLoader();
-                break;
-            case "events":
-                mx.eventsLoader();
-                break;
-            case "scorecard":
-                mx.scorecardLoader();
-                break;
-        }
+    
+    mx.scorecardUploadLoader = function() {
+        return;
     };
     
+    mx.cacheClearLoader = function() {
+        return;
+    };
+    
+    /* 
+     * Tools
+     * 
+     *  */
     mx.startLoader = function(){
         var loader = $("#loader");
         if(mx.SPINNER == null){
