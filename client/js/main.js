@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.10
+ * @version 1.11
  * @author MPI
  */
 
@@ -181,7 +181,7 @@
             mx.CACHE = null;
             mx.PAGE = "cache-clear";
             mx.loadPage(mx.PAGE);
-            mx.setAlert("alert-success", "Local cache was removed.");
+            mx.setAlert("alert-success", "Local cache was cleared.");
             return;
         }else if (e.target.nodeName == "BUTTON" && (e.target.id == "btn-cc-home" || e.target.id == "btn-cc-index")) {
             mx.PAGE = "index";
