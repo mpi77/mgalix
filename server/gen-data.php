@@ -2,14 +2,14 @@
 /**
  * Generate example data.
  *
- * @version 1.2
+ * @version 1.3
  * @author MPI
  * */
 header("Content-Type: text/html; charset=utf-8");
 
 $r1 = array (
                 "id" => 1,
-                "name" => "Vlčí jáma 2015",
+                "name" => "Wolf pit 2015",
                 "station" => null,
                 "ts-start" => "2015-07-07 10:00:00",
                 "ts-end" => "2015-07-07 13:00:00",
@@ -145,7 +145,7 @@ $r1 = array (
 
 $r2 = array (
                 "id" => 2,
-                "name" => "Sokolí oko 2015",
+                "name" => "Falcon eye 2015",
                 "station" => null,
                 "ts-start" => "2015-09-07 10:00:00",
                 "ts-end" => "2015-09-07 13:00:00",

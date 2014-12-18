@@ -273,7 +273,15 @@
     };
     
     mx.scorecardEditLoader = function() {
-        return;
+        $("#cont-se-title").html(" ");
+        $("#cont-se-clicker").html(" ");
+        if(mx.CACHE == null){
+            mx.setAlert("alert-danger", "Empty local cache.");
+            return;
+        }else{
+            $("#cont-se-title").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
+            mx.drawClickTable();
+        }
     };
     
     mx.scorecardUploadLoader = function() {
@@ -294,6 +302,37 @@
      * Tools
      * 
      *  */
+    mx.drawClickTable = function(){
+        var table = document.createElement("TABLE");
+        table.id = "clickTable";
+        table.style.width = "100%";
+
+        var index = 0;
+        var cols = 5;
+        var rows = Math.ceil(mx.CACHE.scorecard.length / cols);
+        for (var i = 0; i < rows; i++) {
+            var tr = document.createElement("TR");
+            for (var j = 0; j < cols; j++, index++) {
+                var td = document.createElement("TD");
+                td.style.padding = "5px";
+                if (mx.CACHE.scorecard[index]) {
+                    var btnDisabled = (mx.CACHE.scorecard.pp == null) ? "" : "disabled";
+                    var btnClass = (mx.CACHE.scorecard[index].pp == null) ? "btn-primary" : "btn-default";
+                    var content = document.createTextNode(mx.CACHE.scorecard[index].sn);
+                    var btn = document.createElement("BUTTON");
+                    btn.id = "btn-click-" + index;
+                    btn.className = "btn btn-lg " + btnClass + " " + btnDisabled;
+                    btn.style.width = "100%";
+                    btn.appendChild(content);
+                    td.appendChild(btn);
+                } 
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        document.getElementById("cont-se-clicker").appendChild(table);
+    };
+    
     mx.setAlert = function(className, message){
         var alertbox = $("#alert-box");
         alertbox.cls("alert-success", "remove");
