@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.12
+ * @version 1.13
  * @author MPI
  */
 
@@ -13,6 +13,8 @@
     mx.LOGIN = false;
     mx.CACHE = null;
     mx.SPINNER = null;
+    mx.SE_CLICK_ORDER = 0;
+    mx.SE_CHANGES = false;
 
     mx.init = function() {
         $("body").on("click", function(e) {
@@ -76,6 +78,7 @@
         });
         
         mx.restoreStorageCache();
+        mx.restoreClickOrder();
         mx.loadPage(mx.PAGE);
     };
     
@@ -175,7 +178,33 @@
     };
 
     mx.scorecardEditHandler = function(e) {
-        return;
+        if (e.target.nodeName == "BUTTON" && /^btn-click-/.test(e.target.id)) {
+            var index = parseInt(e.target.id.substr(10));
+            var btn = $(e.target);
+            if(index >= 0 && mx.CACHE.scorecard[index].pp == null && btn.cls("btn-primary", "has")){
+                btn.cls("btn-primary", "remove");
+                btn.cls("btn-default", "add");
+                btn.cls("disabled", "add");
+                mx.SE_CHANGES = true;
+                mx.styleSeBtnSave(mx.SE_CHANGES);
+                mx.SE_CLICK_ORDER++;
+                mx.CACHE.scorecard[index].pp = mx.SE_CLICK_ORDER;
+            }
+            return;
+        } else if (e.target.nodeName == "BUTTON" && /^btn-se-(back|corr|save)$/.test(e.target.id)) {
+            switch(e.target.id){
+                case "btn-se-back":
+                    break;
+                case "btn-se-corr":
+                    break;
+                case "btn-se-save":
+                    mx.saveStorageCache();
+                    mx.SE_CHANGES = false;
+                    mx.styleSeBtnSave(mx.SE_CHANGES);
+                    break;
+            }
+            return;
+        }
     };
     
     mx.scorecardUploadHandler = function(e) {
@@ -281,6 +310,7 @@
         }else{
             $("#cont-se-title").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
             mx.drawClickTable();
+            mx.styleSeBtnSave(mx.SE_CHANGES);
         }
     };
     
@@ -302,6 +332,29 @@
      * Tools
      * 
      *  */
+    mx.restoreClickOrder = function(){
+        mx.SE_CLICK_ORDER = mx.getLastClickOrder();
+    };
+    
+    mx.getLastClickOrder = function() {
+        var max = 0;
+        for(var i = 0; i<mx.CACHE.scorecard.length; i++){
+            if(mx.CACHE.scorecard[i].pp > max){
+                max = mx.CACHE.scorecard[i].pp;
+            }
+        }
+        return max;
+    }
+    
+    mx.styleSeBtnSave = function(isEnabled) {
+        if (isEnabled) {
+            $("#btn-se-save").cls("disabled", "remove");
+        } else {
+            $("#btn-se-save").cls("disabled", "remove");
+            $("#btn-se-save").cls("disabled", "add");
+        }
+    };
+    
     mx.drawClickTable = function(){
         var table = document.createElement("TABLE");
         table.id = "clickTable";
@@ -316,7 +369,7 @@
                 var td = document.createElement("TD");
                 td.style.padding = "5px";
                 if (mx.CACHE.scorecard[index]) {
-                    var btnDisabled = (mx.CACHE.scorecard.pp == null) ? "" : "disabled";
+                    var btnDisabled = (mx.CACHE.scorecard[index].pp == null) ? "" : "disabled";
                     var btnClass = (mx.CACHE.scorecard[index].pp == null) ? "btn-primary" : "btn-default";
                     var content = document.createTextNode(mx.CACHE.scorecard[index].sn);
                     var btn = document.createElement("BUTTON");
