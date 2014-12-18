@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.11
+ * @version 1.12
  * @author MPI
  */
 
@@ -56,6 +56,13 @@
                 case "cache-clear":
                     mx.cacheClearHandler(e);
                     break;
+                default:
+                    return;
+            }
+            
+            // close menu
+            if ($("#navbar").css("display") == "block") {
+                mx.btnMenuHide();
             }
         });
 
@@ -296,6 +303,9 @@
         alertbox.cls(className, "add");
         alertbox.html(message);
         alertbox.show();
+        window.setTimeout(function(){
+            alertbox.hide();
+        }, 3000);
     };
     
     mx.saveStorageCache = function(){
