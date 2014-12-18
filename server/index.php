@@ -2,7 +2,7 @@
 /**
  * Index page.
  *
- * @version 1.3
+ * @version 1.4
  * @author MPI
  * */
 
@@ -48,12 +48,14 @@ if ($_SESSION["mgalix"]["user"]["auth"] === true || ($_SESSION["mgalix"]["user"]
                 $fdata = array ();
                 foreach ($files as $file) {
                     if (is_file($file) && ($fx = json_decode(file_get_contents($file), true))) {
-                        $fdata[] = array (
-                                        "id" => $fx["id"],
-                                        "name" => $fx["name"],
-                                        "ts-start" => $fx["ts-start"],
-                                        "ts-end" => $fx["ts-end"] 
-                        );
+                        if (!is_null(getUserEventStation($fx["id"], $_SESSION["mgalix"]["user"]["uid"]))) {
+                            $fdata[] = array (
+                                            "id" => $fx["id"],
+                                            "name" => $fx["name"],
+                                            "ts-start" => $fx["ts-start"],
+                                            "ts-end" => $fx["ts-end"] 
+                            );
+                        }
                     }
                 }
                 $r = setResponse(200, $fdata);
