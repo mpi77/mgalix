@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.15
+ * @version 1.16
  * @author MPI
  */
 
@@ -192,6 +192,7 @@
                     var tmp = mx.CACHE.scorecard[index].pp;
                     mx.CACHE.scorecard[index].pp = null;
                     mx.recalcClickOrder(tmp);
+                    mx.SE_CLICK_ORDER--;
                     mx.SE_CHANGES = true;
                     mx.styleSeBtnSave(mx.SE_CHANGES);
                     mx.styleSeBtnBack(true);
@@ -203,6 +204,14 @@
         } else if (e.target.nodeName == "BUTTON" && /^btn-se-(back|rst|save)$/.test(e.target.id)) {
             switch(e.target.id){
                 case "btn-se-back":
+                    var index = mx.getClickOrderCachePosition(mx.SE_CLICK_ORDER);
+                    if(index >=0 && index < mx.CACHE.scorecard.length){
+                        mx.CACHE.scorecard[index].pp = null;
+                        mx.SE_CLICK_ORDER--;
+                        mx.SE_CHANGES = true;
+                        mx.styleSeBtnSave(mx.SE_CHANGES);
+                        mx.syncCacheAllClickTableBtns();
+                    }
                     break;
                 case "btn-se-rst":
                     mx.enableResetBtns(true);
@@ -345,6 +354,16 @@
      * Tools
      * 
      *  */
+    mx.getClickOrderCachePosition = function(orderValue){
+        if(mx.CACHE.scorecard != null){
+            for (var i = 0; i < mx.CACHE.scorecard.length; i++) {
+                if(mx.CACHE.scorecard[i].pp == orderValue){
+                    return i;
+                }
+            }
+            return -1;
+        }
+    };
     
     mx.styleSeBtnBack = function(isEnabled) {
         if (isEnabled) {
