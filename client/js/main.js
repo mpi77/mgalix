@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.16
+ * @version 1.17
  * @author MPI
  */
 
@@ -197,7 +197,7 @@
                     mx.styleSeBtnSave(mx.SE_CHANGES);
                     mx.styleSeBtnBack(true);
                     mx.styleSeBtnRst(true);
-                    mx.syncCacheAllClickTableBtns();
+                    mx.syncCacheClickTableBtns();
                 }
             }
             return;
@@ -210,7 +210,7 @@
                         mx.SE_CLICK_ORDER--;
                         mx.SE_CHANGES = true;
                         mx.styleSeBtnSave(mx.SE_CHANGES);
-                        mx.syncCacheAllClickTableBtns();
+                        mx.syncCacheClickTableBtns();
                     }
                     break;
                 case "btn-se-rst":
@@ -411,7 +411,7 @@
         }
     }
     
-    mx.syncCacheAllClickTableBtns = function () {
+    mx.syncCacheClickTableBtns = function () {
         if(mx.CACHE.scorecard != null){
             for (var i = 0; i < mx.CACHE.scorecard.length; i++) {
                 var enabled = (mx.CACHE.scorecard[i].pp == null);
