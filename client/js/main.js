@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.13
+ * @version 1.14
  * @author MPI
  */
 
@@ -338,9 +338,11 @@
     
     mx.getLastClickOrder = function() {
         var max = 0;
-        for(var i = 0; i<mx.CACHE.scorecard.length; i++){
-            if(mx.CACHE.scorecard[i].pp > max){
-                max = mx.CACHE.scorecard[i].pp;
+        if(mx.CACHE != null){
+            for(var i = 0; i<mx.CACHE.scorecard.length; i++){
+                if(mx.CACHE.scorecard[i].pp > max){
+                    max = mx.CACHE.scorecard[i].pp;
+                }
             }
         }
         return max;
