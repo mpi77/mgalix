@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.14
+ * @version 1.15
  * @author MPI
  */
 
@@ -180,22 +180,35 @@
     mx.scorecardEditHandler = function(e) {
         if (e.target.nodeName == "BUTTON" && /^btn-click-/.test(e.target.id)) {
             var index = parseInt(e.target.id.substr(10));
-            var btn = $(e.target);
-            if(index >= 0 && mx.CACHE.scorecard[index].pp == null && btn.cls("btn-primary", "has")){
-                btn.cls("btn-primary", "remove");
-                btn.cls("btn-default", "add");
-                btn.cls("disabled", "add");
-                mx.SE_CHANGES = true;
-                mx.styleSeBtnSave(mx.SE_CHANGES);
-                mx.SE_CLICK_ORDER++;
-                mx.CACHE.scorecard[index].pp = mx.SE_CLICK_ORDER;
+            if(index >=0 && index < mx.CACHE.scorecard.length){
+                var btn = $(e.target);
+                if(mx.CACHE.scorecard[index].pp == null && btn.cls("btn-primary", "has")){
+                    mx.SE_CLICK_ORDER++;
+                    mx.CACHE.scorecard[index].pp = mx.SE_CLICK_ORDER;
+                    mx.SE_CHANGES = true;
+                    mx.styleSeBtnSave(mx.SE_CHANGES);
+                    mx.styleClickTableBtn("#btn-click-" + index, ["btn-default", "disabled"]);
+                } else if(mx.CACHE.scorecard[index].pp != null && btn.cls("btn-success", "has")){
+                    var tmp = mx.CACHE.scorecard[index].pp;
+                    mx.CACHE.scorecard[index].pp = null;
+                    mx.recalcClickOrder(tmp);
+                    mx.SE_CHANGES = true;
+                    mx.styleSeBtnSave(mx.SE_CHANGES);
+                    mx.styleSeBtnBack(true);
+                    mx.styleSeBtnRst(true);
+                    mx.syncCacheAllClickTableBtns();
+                }
             }
             return;
-        } else if (e.target.nodeName == "BUTTON" && /^btn-se-(back|corr|save)$/.test(e.target.id)) {
+        } else if (e.target.nodeName == "BUTTON" && /^btn-se-(back|rst|save)$/.test(e.target.id)) {
             switch(e.target.id){
                 case "btn-se-back":
                     break;
-                case "btn-se-corr":
+                case "btn-se-rst":
+                    mx.enableResetBtns(true);
+                    mx.styleSeBtnBack(false);
+                    mx.styleSeBtnRst(false);
+                    mx.styleSeBtnSave(false);
                     break;
                 case "btn-se-save":
                     mx.saveStorageCache();
@@ -332,6 +345,74 @@
      * Tools
      * 
      *  */
+    
+    mx.styleSeBtnBack = function(isEnabled) {
+        if (isEnabled) {
+            $("#btn-se-back").cls("disabled", "remove");
+        } else {
+            $("#btn-se-back").cls("disabled", "remove");
+            $("#btn-se-back").cls("disabled", "add");
+        }
+    };
+    
+    mx.styleSeBtnRst = function(isEnabled) {
+        if (isEnabled) {
+            $("#btn-se-rst").cls("disabled", "remove");
+        } else {
+            $("#btn-se-rst").cls("disabled", "remove");
+            $("#btn-se-rst").cls("disabled", "add");
+        }
+    };
+    
+    mx.recalcClickOrder = function (excludedValue) {
+        if(mx.CACHE.scorecard != null){
+            for (var i = 0; i < mx.CACHE.scorecard.length; i++) {
+                if(mx.CACHE.scorecard[i].pp > excludedValue){
+                    mx.CACHE.scorecard[i].pp--;
+                }
+           }
+        }
+    }
+    
+    mx.enableResetBtns = function(enabled) {
+        for (var i = 0; i < mx.CACHE.scorecard.length; i++) {
+            if(enabled){
+                if (mx.CACHE.scorecard[i].pp != null) {
+                    mx.styleClickTableBtn("#btn-click-" + i, ["btn-success"]);
+                } else {
+                    mx.styleClickTableBtn("#btn-click-" + i, ["btn-default", "disabled"]);
+                }
+            } else {
+                if (mx.CACHE.scorecard[i].pp != null) {
+                    mx.styleClickTableBtn("#btn-click-" + i, ["btn-default", "disabled"]);
+                } else {
+                    mx.styleClickTableBtn("#btn-click-" + i, ["btn-primary"]);
+                }
+            }
+        }
+    }
+    
+    mx.syncCacheAllClickTableBtns = function () {
+        if(mx.CACHE.scorecard != null){
+            for (var i = 0; i < mx.CACHE.scorecard.length; i++) {
+                var enabled = (mx.CACHE.scorecard[i].pp == null);
+                mx.styleClickTableBtn("#btn-click-" + i, [(enabled ? "" : "disabled"), (enabled ? "btn-primary" : "btn-default")]);
+           }
+        }
+    }
+    
+    mx.styleClickTableBtn = function(selector, addClass){
+        var btn = $(selector);
+        btn.cls("btn-default", "remove");
+        btn.cls("btn-primary", "remove");
+        btn.cls("btn-success", "remove");
+        btn.cls("disabled", "remove");
+        
+        for(var i = 0; i < addClass.length; i++){
+            btn.cls(addClass[i], "add");
+        }
+    }
+    
     mx.restoreClickOrder = function(){
         mx.SE_CLICK_ORDER = mx.getLastClickOrder();
     };
@@ -351,9 +432,13 @@
     mx.styleSeBtnSave = function(isEnabled) {
         if (isEnabled) {
             $("#btn-se-save").cls("disabled", "remove");
+            $("#btn-se-save").cls("btn-default", "remove");
+            $("#btn-se-save").cls("btn-danger", "add");
         } else {
             $("#btn-se-save").cls("disabled", "remove");
+            $("#btn-se-save").cls("btn-danger", "remove");
             $("#btn-se-save").cls("disabled", "add");
+            $("#btn-se-save").cls("btn-default", "add");
         }
     };
     
