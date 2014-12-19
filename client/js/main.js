@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.17
+ * @version 1.18
  * @author MPI
  */
 
@@ -187,6 +187,8 @@
                     mx.CACHE.scorecard[index].pp = mx.SE_CLICK_ORDER;
                     mx.SE_CHANGES = true;
                     mx.styleSeBtnSave(mx.SE_CHANGES);
+                    mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+                    mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
                     mx.styleClickTableBtn("#btn-click-" + index, ["btn-default", "disabled"]);
                 } else if(mx.CACHE.scorecard[index].pp != null && btn.cls("btn-success", "has")){
                     var tmp = mx.CACHE.scorecard[index].pp;
@@ -195,8 +197,8 @@
                     mx.SE_CLICK_ORDER--;
                     mx.SE_CHANGES = true;
                     mx.styleSeBtnSave(mx.SE_CHANGES);
-                    mx.styleSeBtnBack(true);
-                    mx.styleSeBtnRst(true);
+                    mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+                    mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
                     mx.syncCacheClickTableBtns();
                 }
             }
@@ -210,6 +212,8 @@
                         mx.SE_CLICK_ORDER--;
                         mx.SE_CHANGES = true;
                         mx.styleSeBtnSave(mx.SE_CHANGES);
+                        mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+                        mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
                         mx.syncCacheClickTableBtns();
                     }
                     break;
@@ -223,6 +227,8 @@
                     mx.saveStorageCache();
                     mx.SE_CHANGES = false;
                     mx.styleSeBtnSave(mx.SE_CHANGES);
+                    mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+                    mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
                     break;
             }
             return;
@@ -333,6 +339,8 @@
             $("#cont-se-title").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
             mx.drawClickTable();
             mx.styleSeBtnSave(mx.SE_CHANGES);
+            mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+            mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
         }
     };
     
