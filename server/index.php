@@ -2,7 +2,7 @@
 /**
  * Index page.
  *
- * @version 1.4
+ * @version 1.5
  * @author MPI
  * */
 
@@ -39,6 +39,8 @@ if ($_SESSION["mgalix"]["user"]["auth"] === true || ($_SESSION["mgalix"]["user"]
                 }
                 break;
             case "updateEvent" :
+                // TODO
+                $r = setResponse(200);
                 break;
             case "getEventList" :
                 $files = findAllFiles("data", array (

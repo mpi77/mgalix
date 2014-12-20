@@ -67,6 +67,10 @@ div[id^=pg-] {
 	padding: 44px 0 10px 0;
 }
 
+#sp-i-reop-etitle{
+	font-weight: bold;
+}
+
 .alert {
 	position: fixed;
 	top: 55px;

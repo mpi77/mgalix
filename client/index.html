@@ -41,7 +41,7 @@
 	<div id="pg-index" class="container">
 		<h3>Welcome to mGalix</h3>
 		<div id="cont-i-reopen">
-			<p>You have opened event. Would you like to continue with this event?</p>
+			<p>You have opened event <span id="sp-i-reop-etitle"></span>. Would you like to continue with this event?</p>
 			<div class="spacer-10"></div>
 			<button type="button" class="btn btn-primary btn-lg center-block" id="btn-i-reop">Yes &amp; reopen it</button>
 		</div>
@@ -53,6 +53,7 @@
 	</div>
 
 	<div id="pg-login" class="container hide">
+		<h3>Sign in</h3>
 		<form id="fm-login" role="form">
 			<div class="form-group">
 				<label class="control-label" for="username">Username</label> <input
@@ -87,7 +88,19 @@
 	</div>
 	
 	<div id="pg-scorecard-upload" class="container hide">
-		<div>upload scorecard</div>
+		<h3>Upload scorecard</h3>
+		<div id="cont-su-save">
+			<p>You have unsaved changes. You have to save these changes first.</p>
+			<div class="spacer-10"></div>
+			<button type="button" class="btn btn-primary btn-lg center-block" id="btn-su-save">Save changes</button>
+		</div>
+		<div id="cont-su-upload">
+			<p>You can upload your scorecard to server. Would you like to continue?</p>
+			<div class="spacer-10"></div>
+			<button type="button" class="btn btn-primary btn-lg center-block" id="btn-su-up">Yes &amp; upload it</button>
+			<div class="spacer-10"></div>
+			<button type="button" class="btn btn-default btn-lg center-block" id="btn-su-reop">No &amp; reopen scorecard</button>
+		</div>
 	</div>
 	
 	<div id="pg-cache-clear" class="container hide">

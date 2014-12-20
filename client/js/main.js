@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.20
+ * @version 1.21
  * @author MPI
  */
 
@@ -244,7 +244,57 @@
     };
     
     mx.scorecardUploadHandler = function(e) {
-        return;
+        if (e.target.nodeName == "BUTTON" && /^btn-su-(save|up|reop)$/.test(e.target.id)) {
+            switch(e.target.id){
+                case "btn-su-save":
+                    mx.saveStorageCache();
+                    mx.SE_CHANGES = false;
+                    mx.PAGE = "scorecard-upload";
+                    mx.loadPage(mx.PAGE);
+                    break;
+                case "btn-su-up":
+                    if(mx.SE_CHANGES == false){
+                        // TODO: add gps
+                        var cacheString = mx.getStorageCacheString();
+                        if(cacheString !== false){
+                            $({
+                                data : cacheString
+                            }).ajax(
+                                    "../server/?action=updateEvent",
+                                    "POST",
+                                    function(r, status) {
+                                        if(status == 200){
+                                            r = JSON.parse(r);
+                                            if (r.status == 200) {
+                                                mx.CACHE = null;
+                                                mx.clearStorageCache();
+                                                mx.SE_CHANGES = false;
+                                                mx.SE_CLICK_ORDER = 0;
+                                                mx.PAGE = "index";
+                                                mx.loadPage(mx.PAGE);
+                                                mx.setAlert("alert-success", "Event uploaded to server.");
+                                            } else if (r.status == 401) {
+                                                mx.RPAGE = "scorecard-upload";
+                                                mx.PAGE = "login";
+                                                mx.loadPage(mx.PAGE);
+                                            } else {
+                                                mx.setAlert("alert-danger", "Connection failed.");
+                                            }
+                                        }else{
+                                            mx.setAlert("alert-danger", "Connection failed.");
+                                        }
+                                        mx.stopLoader();
+                                    }, true);
+                        }
+                    }
+                    break;
+                case "btn-su-reop":
+                    mx.PAGE = "scorecard-edit";
+                    mx.loadPage(mx.PAGE);
+                    break;
+            }
+            return;
+        }
     };
     
     mx.cacheClearHandler = function(e) {
@@ -299,6 +349,7 @@
         if(mx.CACHE != null){
             $("#cont-i-reopen").show();
             $("#cont-i-download").hide();
+            $("#sp-i-reop-etitle").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
         } else{
             $("#cont-i-reopen").hide();
             $("#cont-i-download").show();
@@ -357,7 +408,19 @@
     };
     
     mx.scorecardUploadLoader = function() {
-        return;
+        if(mx.CACHE == null){
+            $("#cont-su-upload").hide();
+            $("#cont-su-save").hide();
+            mx.setAlert("alert-danger", "Empty local cache.");
+        }else{
+            if(mx.SE_CHANGES){
+                $("#cont-su-save").show();
+                $("#cont-su-upload").hide();
+            }else{
+                $("#cont-su-save").hide();
+                $("#cont-su-upload").show();
+            }
+        }
     };
     
     mx.cacheClearLoader = function() {
@@ -524,6 +587,15 @@
         window.setTimeout(function(){
             alertbox.hide();
         }, 3000);
+    };
+    
+    mx.getStorageCacheString = function(){
+        if (typeof(Storage) != "undefined") {
+            return localStorage.getItem("mxCache");
+        } else {
+            mx.setAlert("alert-danger", "Storage cache not supported.");
+        }
+        return false;
     };
     
     mx.saveStorageCache = function(){
