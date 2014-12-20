@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.19
+ * @version 1.20
  * @author MPI
  */
 
@@ -594,11 +594,13 @@
     mx.btnMenuShow = function() {
         $("#navbar").show();
         $("#navbar").css("visibility", "visible");
+        $("#btn-menu").css("background-color", "#333");
     };
 
     mx.btnMenuHide = function() {
         $("#navbar").hide();
         $("#navbar").css("visibility", "hidden");
+        $("#btn-menu").css("background-color", "inherit");
     };
     
     mx.btnDisable = function(isDisabled, selector){
