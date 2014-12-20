@@ -27,7 +27,8 @@ div[id^=pg-] {
 
 #btn-menu{
 	margin: 1px 1px 1px;
-	padding: 16px 16px;
+	padding: 17px 17px;
+	border: 0px;
 }
 
 #loader {
