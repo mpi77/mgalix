@@ -25,6 +25,11 @@ div[id^=pg-] {
 	}
 }
 
+#btn-menu{
+	margin: 1px 1px 1px;
+	padding: 16px 16px;
+}
+
 #loader {
 	display: none;
 	position: fixed;

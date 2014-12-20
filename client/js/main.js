@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.18
+ * @version 1.19
  * @author MPI
  */
 
@@ -127,19 +127,23 @@
                 }).ajax(
                         "../server/?action=login",
                         "POST",
-                        function(data, status) {
-                            data = JSON.parse(data);
-                            if (data.status == 200) {
-                                mx.LOGIN = true;
-                                mx.PAGE = mx.RPAGE != "" ? mx.RPAGE : "index";
-                                mx.RPAGE = "";
-                                mx.loadPage(mx.PAGE);
-                            } else {
-                                mx.LOGIN = false;
-                                mx.styleLoginInput(false,
-                                        username[0].parentNode);
-                                mx.styleLoginInput(false,
-                                        password[0].parentNode);
+                        function(r, status) {
+                            if(status == 200){
+                                r = JSON.parse(r);
+                                if (r.status == 200) {
+                                    mx.LOGIN = true;
+                                    mx.PAGE = mx.RPAGE != "" ? mx.RPAGE : "index";
+                                    mx.RPAGE = "";
+                                    mx.loadPage(mx.PAGE);
+                                } else {
+                                    mx.LOGIN = false;
+                                    mx.styleLoginInput(false,
+                                            username[0].parentNode);
+                                    mx.styleLoginInput(false,
+                                            password[0].parentNode);
+                                }
+                            }else{
+                                mx.setAlert("alert-danger", "Connection failed.");
                             }
                             mx.stopLoader();
                         }, true);
@@ -157,18 +161,22 @@
                         "../server/?action=getEvent",
                         "GET",
                         function(r, status) {
-                            r = JSON.parse(r);
-                            if (r.status == 200) {
-                                mx.CACHE = r.data;
-                                mx.saveStorageCache();
-                                mx.PAGE = "scorecard-edit";
-                                mx.loadPage(mx.PAGE);
-                                mx.setAlert("alert-success", "Event saved to local.");
-                            } else if (r.status == 401) {
-                                mx.RPAGE = "events";
-                                mx.PAGE = "login";
-                                mx.loadPage(mx.PAGE);
-                            } else {
+                            if(status == 200){
+                                r = JSON.parse(r);
+                                if (r.status == 200) {
+                                    mx.CACHE = r.data;
+                                    mx.saveStorageCache();
+                                    mx.PAGE = "scorecard-edit";
+                                    mx.loadPage(mx.PAGE);
+                                    mx.setAlert("alert-success", "Event saved to local.");
+                                } else if (r.status == 401) {
+                                    mx.RPAGE = "events";
+                                    mx.PAGE = "login";
+                                    mx.loadPage(mx.PAGE);
+                                } else {
+                                    mx.setAlert("alert-danger", "Connection failed.");
+                                }
+                            } else{
                                 mx.setAlert("alert-danger", "Connection failed.");
                             }
                             mx.stopLoader();
@@ -310,20 +318,24 @@
                 "../server/?action=getEventList",
                 "GET",
                 function(r, status) {
-                    r = JSON.parse(r);
-                    if (r.status == 200) {
-                        var s = "";
-                        for (var i = 0; i < r.data.length; i++) {
-                            s += "<option value=" + r.data[i].id + ">" + r.data[i].name + "</option>";
+                    if(status == 200){
+                        r = JSON.parse(r);
+                        if (r.status == 200) {
+                            var s = "";
+                            for (var i = 0; i < r.data.length; i++) {
+                                s += "<option value=" + r.data[i].id + ">" + r.data[i].name + "</option>";
+                            }
+                            s += "<option value=\"0\">none</option>";
+                            $("#sel-events").html(s);
+                            mx.btnDisable(false, "#btn-download");
+                        } else if (r.status == 401) {
+                            mx.RPAGE = "events";
+                            mx.PAGE = "login";
+                            mx.loadPage(mx.PAGE);
+                        } else {
+                            mx.setAlert("alert-danger", "Connection failed.");
                         }
-                        s += "<option value=\"0\">none</option>";
-                        $("#sel-events").html(s);
-                        mx.btnDisable(false, "#btn-download");
-                    } else if (r.status == 401) {
-                        mx.RPAGE = "events";
-                        mx.PAGE = "login";
-                        mx.loadPage(mx.PAGE);
-                    } else {
+                    } else{
                         mx.setAlert("alert-danger", "Connection failed.");
                     }
                 }, true);
