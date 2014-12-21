@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.21
+ * @version 1.22
  * @author MPI
  */
 
@@ -162,9 +162,11 @@
                         "GET",
                         function(r, status) {
                             if(status == 200){
+                                var ts = mx.getNowTimestamp();
                                 r = JSON.parse(r);
                                 if (r.status == 200) {
                                     mx.CACHE = r.data;
+                                    mx.CACHE["ts-cli-rx"] = ts;
                                     mx.saveStorageCache();
                                     mx.PAGE = "scorecard-edit";
                                     mx.loadPage(mx.PAGE);
@@ -193,6 +195,7 @@
                 if(mx.CACHE.scorecard[index].pp == null && btn.cls("btn-primary", "has")){
                     mx.SE_CLICK_ORDER++;
                     mx.CACHE.scorecard[index].pp = mx.SE_CLICK_ORDER;
+                    mx.CACHE.scorecard[index].pt = mx.getNowTimestamp();
                     mx.SE_CHANGES = true;
                     mx.styleSeBtnSave(mx.SE_CHANGES);
                     mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
@@ -201,6 +204,7 @@
                 } else if(mx.CACHE.scorecard[index].pp != null && btn.cls("btn-success", "has")){
                     var tmp = mx.CACHE.scorecard[index].pp;
                     mx.CACHE.scorecard[index].pp = null;
+                    mx.CACHE.scorecard[index].pt = null;
                     mx.recalcClickOrder(tmp);
                     mx.SE_CLICK_ORDER--;
                     mx.SE_CHANGES = true;
@@ -217,6 +221,7 @@
                     var index = mx.getClickOrderCachePosition(mx.SE_CLICK_ORDER);
                     if(index >=0 && index < mx.CACHE.scorecard.length){
                         mx.CACHE.scorecard[index].pp = null;
+                        mx.CACHE.scorecard[index].pt = null;
                         mx.SE_CLICK_ORDER--;
                         mx.SE_CHANGES = true;
                         mx.styleSeBtnSave(mx.SE_CHANGES);
@@ -437,6 +442,13 @@
      * Tools
      * 
      *  */
+    mx.getNowTimestamp = function(){
+        var ts = new Date();
+        ts = ts.toISOString();
+        ts = ts.substr(0,10)+" "+ts.substr(11,8);
+        return ts;
+    };
+    
     mx.getClickOrderCachePosition = function(orderValue){
         if(mx.CACHE.scorecard != null){
             for (var i = 0; i < mx.CACHE.scorecard.length; i++) {
