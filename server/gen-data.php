@@ -2,7 +2,7 @@
 /**
  * Generate example data.
  *
- * @version 1.3
+ * @version 1.4
  * @author MPI
  * */
 header("Content-Type: text/html; charset=utf-8");
@@ -11,8 +11,10 @@ $r1 = array (
                 "id" => 1,
                 "name" => "Wolf pit 2015",
                 "station" => null,
-                "ts-start" => "2015-07-07 10:00:00",
-                "ts-end" => "2015-07-07 13:00:00",
+                "ts-ev-start" => "2015-07-07 10:00:00",
+                "ts-ev-end" => "2015-07-07 13:00:00",
+                "ts-srv-tx" => null,
+                "ts-cli-rx" => null,
                 "gps" => array (
                                 "lat" => null,
                                 "lng" => null,
@@ -22,123 +24,153 @@ $r1 = array (
                 "scorecard" => array (
                                 array (
                                                 "sn" => 1,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null 
                                 ),
                                 array (
                                                 "sn" => 2,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 3,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 4,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 5,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 6,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 7,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 8,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 9,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 10,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 11,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 12,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 13,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 14,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 15,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 16,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 17,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 18,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 19,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 20,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 21,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 22,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 23,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 24,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 25,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 26,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 27,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 28,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 29,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 30,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ) 
                 ) 
 );
@@ -147,8 +179,10 @@ $r2 = array (
                 "id" => 2,
                 "name" => "Falcon eye 2015",
                 "station" => null,
-                "ts-start" => "2015-09-07 10:00:00",
-                "ts-end" => "2015-09-07 13:00:00",
+                "ts-ev-start" => "2015-09-07 10:00:00",
+                "ts-ev-end" => "2015-09-07 13:00:00",
+                "ts-srv-tx" => null,
+                "ts-cli-rx" => null,
                 "gps" => array (
                                 "lat" => null,
                                 "lng" => null,
@@ -158,39 +192,48 @@ $r2 = array (
                 "scorecard" => array (
                                 array (
                                                 "sn" => 1,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 2,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 3,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 4,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 5,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 6,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 7,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 8,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ),
                                 array (
                                                 "sn" => 9,
-                                                "pp" => null 
+                                                "pp" => null,
+                                                "pt" => null
                                 ) 
                 ) 
 );
