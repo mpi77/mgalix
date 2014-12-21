@@ -2,7 +2,7 @@
 /**
  * Index page.
  *
- * @version 1.5
+ * @version 1.6
  * @author MPI
  * */
 
@@ -30,6 +30,7 @@ if ($_SESSION["mgalix"]["user"]["auth"] === true || ($_SESSION["mgalix"]["user"]
                     $file = sprintf("data/%d.json", $_GET["eid"]);
                     if (is_file($file) && ($fdata = json_decode(file_get_contents($file), true)) && ($station = getUserEventStation($_GET["eid"], $_SESSION["mgalix"]["user"]["uid"]))) {
                         $fdata["station"] = $station;
+                        $fdata["ts-srv-tx"] = date("Y-m-d H:i:s");
                         $r = setResponse(200, $fdata);
                     } else {
                         $r = setResponse(404);
