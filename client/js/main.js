@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.23
+ * @version 1.24
  * @author MPI
  */
 
@@ -252,7 +252,10 @@
     };
     
     mx.scorecardHistoryHandler = function(e) {
-        
+        if (e.target.nodeName == "BUTTON" && /^btn-sh-back$/.test(e.target.id)) {
+            mx.PAGE = "scorecard-edit";
+            mx.loadPage(mx.PAGE);
+        }
     };
     
     mx.scorecardUploadHandler = function(e) {
@@ -393,7 +396,12 @@
     };
     
     mx.scorecardHistoryLoader = function() {
-        
+        if(mx.CACHE == null){
+            mx.setAlert("alert-danger", "Empty local cache.");
+            return;
+        }else{
+            
+        }
     };
     
     mx.scorecardUploadLoader = function() {
