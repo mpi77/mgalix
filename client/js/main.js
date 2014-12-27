@@ -259,38 +259,8 @@
                     break;
                 case "btn-su-up":
                     if(mx.SE_CHANGES == false){
-                        // TODO: add gps
-                        var cacheString = mx.getStorageCacheString();
-                        if(cacheString !== false){
-                            $({
-                                data : cacheString
-                            }).ajax(
-                                    "../server/?action=updateEvent",
-                                    "POST",
-                                    function(r, status) {
-                                        if(status == 200){
-                                            r = JSON.parse(r);
-                                            if (r.status == 200) {
-                                                mx.CACHE = null;
-                                                mx.clearStorageCache();
-                                                mx.SE_CHANGES = false;
-                                                mx.SE_CLICK_ORDER = 0;
-                                                mx.PAGE = "index";
-                                                mx.loadPage(mx.PAGE);
-                                                mx.setAlert("alert-success", "Event uploaded to server.");
-                                            } else if (r.status == 401) {
-                                                mx.RPAGE = "scorecard-upload";
-                                                mx.PAGE = "login";
-                                                mx.loadPage(mx.PAGE);
-                                            } else {
-                                                mx.setAlert("alert-danger", "Connection failed.");
-                                            }
-                                        }else{
-                                            mx.setAlert("alert-danger", "Connection failed.");
-                                        }
-                                        mx.stopLoader();
-                                    }, true);
-                        }
+                        mx.restoreStorageCache();
+                        mx.getLocation();
                     }
                     break;
                 case "btn-su-reop":
@@ -442,6 +412,74 @@
      * Tools
      * 
      *  */
+    mx.uploadCacheString = function(){
+        var cacheString = mx.getStorageCacheString();
+        if(cacheString !== false){
+            $({
+                data : cacheString
+            }).ajax(
+                    "../server/?action=updateEvent",
+                    "POST",
+                    function(r, status) {
+                        if(status == 200){
+                            r = JSON.parse(r);
+                            if (r.status == 200) {
+                                mx.CACHE = null;
+                                mx.clearStorageCache();
+                                mx.SE_CHANGES = false;
+                                mx.SE_CLICK_ORDER = 0;
+                                mx.PAGE = "index";
+                                mx.loadPage(mx.PAGE);
+                                mx.setAlert("alert-success", "Event uploaded to server.");
+                            } else if (r.status == 401) {
+                                mx.RPAGE = "scorecard-upload";
+                                mx.PAGE = "login";
+                                mx.loadPage(mx.PAGE);
+                            } else {
+                                mx.setAlert("alert-danger", "Connection failed.");
+                            }
+                        }else{
+                            mx.setAlert("alert-danger", "Connection failed.");
+                        }
+                        mx.stopLoader();
+                    }, true);
+        }
+    };
+    
+    mx.getLocation = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(mx.saveLocation, mx.errorLocation);
+        } else {
+            mx.setAlert("alert-danger", "Geolocation is not supported.");
+        }
+    };
+    
+    mx.saveLocation = function(position) {
+        mx.CACHE.gps.lat = position.coords.latitude;
+        mx.CACHE.gps.lng = position.coords.longitude;
+        mx.CACHE.gps.alt = position.coords.altitude;
+        mx.CACHE.gps.ts = position.timestamp;
+        mx.saveStorageCache();
+        mx.uploadCacheString();
+    };
+    
+    mx.errorLocation = function(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                mx.setAlert("alert-danger", "User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                mx.setAlert("alert-danger", "Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                mx.setAlert("alert-danger", "The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                mx.setAlert("alert-danger", "An unknown error occurred.");
+                break;
+        }
+    };
+    
     mx.getNowTimestamp = function(){
         var ts = new Date();
         ts = ts.toISOString();
