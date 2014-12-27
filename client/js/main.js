@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.22
+ * @version 1.23
  * @author MPI
  */
 
@@ -51,6 +51,9 @@
                     break;
                 case "scorecard-edit":
                     mx.scorecardEditHandler(e);
+                    break;
+                case "scorecard-history":
+                    mx.scorecardHistoryHandler(e);
                     break;
                 case "scorecard-upload":
                     mx.scorecardUploadHandler(e);
@@ -248,6 +251,10 @@
         }
     };
     
+    mx.scorecardHistoryHandler = function(e) {
+        
+    };
+    
     mx.scorecardUploadHandler = function(e) {
         if (e.target.nodeName == "BUTTON" && /^btn-su-(save|up|reop)$/.test(e.target.id)) {
             switch(e.target.id){
@@ -310,6 +317,9 @@
                 break;
             case "scorecard-edit":
                 mx.scorecardEditLoader();
+                break;
+            case "scorecard-history":
+                mx.scorecardHistoryLoader();
                 break;
             case "scorecard-upload":
                 mx.scorecardUploadLoader();
@@ -380,6 +390,10 @@
             mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
             mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
         }
+    };
+    
+    mx.scorecardHistoryLoader = function() {
+        
     };
     
     mx.scorecardUploadLoader = function() {
