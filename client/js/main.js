@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.24
+ * @version 1.25
  * @author MPI
  */
 
@@ -396,11 +396,25 @@
     };
     
     mx.scorecardHistoryLoader = function() {
+        $("#cont-sh-order").html(" ");
         if(mx.CACHE == null){
             mx.setAlert("alert-danger", "Empty local cache.");
             return;
         }else{
-            
+            var sc = mx.CACHE.scorecard.slice(0), 
+                end = 0;
+            sc.sort(function(a,b){
+                return b.pp - a.pp;
+            });
+            for(var i = 0; i < sc.length; i++){
+                if(sc[i].pp != null){
+                    end++;
+                } else{
+                    break;
+                }
+            }
+            sc = sc.slice(0,end);
+            mx.drawHistoryTable(sc);
         }
     };
     
@@ -434,6 +448,41 @@
      * Tools
      * 
      *  */
+    mx.drawHistoryTable = function(data){
+        var table = document.createElement("TABLE"),
+            thead = document.createElement("THEAD"),
+            tbody = document.createElement("TBODY");
+        table.id = "historyTable";
+        table.className = "table";
+
+        var tr = document.createElement("TR"),
+            th_s = document.createElement("TH"),
+            th_t = document.createElement("TH");
+        th_s.innerHTML = "Num.";
+        th_t.innerHTML = "Time";
+        tr.appendChild(th_s);
+        tr.appendChild(th_t);
+        thead.appendChild(tr);
+        
+        for (var i = 0; i < data.length; i++) {
+            var tr = document.createElement("TR"),
+                td_s = document.createElement("TD"),
+                td_t = document.createElement("TD"),
+                cont_s = document.createTextNode(data[i].sn),
+                cont_t = document.createTextNode(data[i].pt);
+            td_s.className = "col-0";
+            td_t.className = "col-1";
+            td_s.appendChild(cont_s);
+            td_t.appendChild(cont_t);
+            tr.appendChild(td_s);
+            tr.appendChild(td_t);
+            tbody.appendChild(tr);
+        }
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        document.getElementById("cont-sh-order").appendChild(table);
+    };
+    
     mx.uploadCacheString = function(){
         var cacheString = mx.getStorageCacheString();
         if(cacheString !== false){

@@ -22,6 +22,12 @@ div[id^=pg-] {
 @media ( min-width : 500px) {
 	#pg-login {
 		width: 300px;
+		margin: 0 auto;
+	}
+	
+	#historyTable{
+		width: 300px;
+		margin: 0 auto;
 	}
 }
 
@@ -65,6 +71,11 @@ div[id^=pg-] {
 	padding: 5px 0;
 	text-align: center;
 	z-index: 1000;
+	background-color: #fff;
+}
+
+#pg-scorecard-history{
+	padding-top: 40px;
 }
 
 #cont-se-menu button {
@@ -75,6 +86,18 @@ div[id^=pg-] {
 	font-size: 14pt;
 	font-weight: bold;
 	padding: 44px 0 10px 0;
+}
+
+#historyTable .col-0{
+	width: 30%;
+	text-align: center;
+	padding: 5px 15px 5px 0;
+	font-weight: bold;
+}
+
+#historyTable .col-1{
+	width: 70%;
+	padding: 5px 0;
 }
 
 #sp-i-reop-etitle{
