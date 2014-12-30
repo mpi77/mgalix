@@ -1,7 +1,7 @@
 /*
  * mx main app script
  * 
- * @version 1.28
+ * @version 1.30
  * @author MPI
  */
 
@@ -307,6 +307,8 @@
         $("div[id^=pg-]").cls("hide", "remove");
         $("div[id^=pg-]").cls("hide", "add");
         $("#pg-" + page).cls("hide", "remove");
+        $("#navbar li").cls("active", "remove");
+        ($("#nv-"+page))[0].parentNode.className = "active";
         mx.stopLoader();
         
         // onload page handler
