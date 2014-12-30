@@ -100,6 +100,14 @@ div[id^=pg-] {
 	padding: 5px 0;
 }
 
+#se-time-restriction{
+	text-align: center;
+}
+
+.p-se-date{
+	font-weight: bold;
+}
+
 #sp-i-reop-etitle{
 	font-weight: bold;
 }

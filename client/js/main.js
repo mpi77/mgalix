@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.25
+ * @version 1.26
  * @author MPI
  */
 
@@ -388,10 +388,23 @@
             return;
         }else{
             $("#cont-se-title").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
-            mx.drawClickTable();
-            mx.styleSeBtnSave(mx.SE_CHANGES);
-            mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
-            mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
+            var now = mx.getDateFromTimestamp(mx.getNowTimestamp()).getTime(),
+                start = mx.getDateFromTimestamp(mx.CACHE["ts-ev-start"]).getTime(),
+                end = mx.getDateFromTimestamp(mx.CACHE["ts-ev-end"]).getTime();
+            if(now >= start && now <= end){
+                mx.drawClickTable();
+                mx.styleSeBtnSave(mx.SE_CHANGES);
+                mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+                mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
+            } else{
+                mx.setAlert("alert-danger", "Event is time blocked.");
+                $("#cont-se-clicker").html("<div id=\"se-time-restriction\">"
+                        + "<p>You can edit this event in time range</p>" 
+                        + "<p class=\"p-se-date\">" + mx.CACHE["ts-ev-start"] + "</p>"
+                        + "<p class=\"p-se-date\">" + mx.CACHE["ts-ev-end"] + "</p>"
+                        + "</div>");
+                return;
+            }
         }
     };
     
@@ -448,6 +461,16 @@
      * Tools
      * 
      *  */
+    mx.getDateFromTimestamp = function(ts){
+        var n = ts.match(/^(\d{4})\-(\d{2})\-(\d{2}) (\d{2})\:(\d{2})\:(\d{2})$/);
+        var r = new Date();
+        r.setUTCFullYear(n[1]);
+        r.setUTCMonth(n[2]-1);
+        r.setUTCDate(n[3]);
+        r.setUTCHours(n[4],n[5],n[6],0);
+        return r;
+    };
+    
     mx.drawHistoryTable = function(data){
         var table = document.createElement("TABLE"),
             thead = document.createElement("THEAD"),
