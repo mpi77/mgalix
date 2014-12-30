@@ -1,4 +1,4 @@
-/**
+/*
  * mx main app script
  * 
  * @version 1.28
@@ -171,6 +171,8 @@
                                     mx.CACHE = r.data;
                                     mx.CACHE["ts-cli-rx"] = ts;
                                     mx.saveStorageCache();
+                                    mx.SE_CHANGES = false;
+                                    mx.SE_CLICK_ORDER = 0;
                                     mx.PAGE = "scorecard-edit";
                                     mx.loadPage(mx.PAGE);
                                     mx.setAlert("alert-success", "Event saved to local.");
@@ -385,7 +387,8 @@
         $("#cont-se-clicker").html(" ");
         if(mx.CACHE == null){
             mx.setAlert("alert-danger", "Empty local cache.");
-            return;
+            mx.SE_CHANGES = false;
+            mx.SE_CLICK_ORDER = 0;
         }else{
             $("#cont-se-title").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
             var now = mx.getDateFromTimestamp(mx.getNowTimestamp()).getTime(),
@@ -408,10 +411,10 @@
                 mx.SE_CHANGES = false;
                 mx.SE_CLICK_ORDER = 0;
             }
-            mx.styleSeBtnSave(mx.SE_CHANGES);
-            mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
-            mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
         }
+        mx.styleSeBtnSave(mx.SE_CHANGES);
+        mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+        mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
     };
     
     mx.scorecardHistoryLoader = function() {
@@ -467,6 +470,15 @@
      * Tools
      * 
      *  */
+    mx.getViewport = function() {
+        var e = window, a = "inner";
+        if (!("innerWidth" in window )) {
+            a = "client";
+            e = document.documentElement || document.body;
+        }
+        return {width : e[a+"Width"], height : e[a+"Height"]};
+    }
+    
     mx.getDateFromTimestamp = function(ts){
         var n = ts.match(/^(\d{4})\-(\d{2})\-(\d{2}) (\d{2})\:(\d{2})\:(\d{2})$/);
         var r = new Date();
@@ -698,9 +710,10 @@
         var table = document.createElement("TABLE");
         table.id = "clickTable";
         table.style.width = "100%";
-
+        
         var index = 0;
-        var cols = 5;
+        var cols = 5 * Math.floor(($("#cont-se-clicker"))[0].clientWidth/300);
+        cols = (cols <= 0) ? 5 : cols;
         var rows = Math.ceil(mx.CACHE.scorecard.length / cols);
         for (var i = 0; i < rows; i++) {
             var tr = document.createElement("TR");
