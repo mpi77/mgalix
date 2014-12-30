@@ -2,13 +2,15 @@
 /**
  * Index page.
  *
- * @version 1.6
+ * @version 1.7
  * @author MPI
  * */
 
 /* init session */
 session_start();
 initSession();
+
+date_default_timezone_set('Europe/Prague');
 
 header("Content-Type: application/json; charset=utf-8");
 

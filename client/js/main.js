@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.26
+ * @version 1.27
  * @author MPI
  */
 
@@ -390,7 +390,12 @@
             $("#cont-se-title").html(mx.CACHE.name + " (" + mx.CACHE.station + ")");
             var now = mx.getDateFromTimestamp(mx.getNowTimestamp()).getTime(),
                 start = mx.getDateFromTimestamp(mx.CACHE["ts-ev-start"]).getTime(),
-                end = mx.getDateFromTimestamp(mx.CACHE["ts-ev-end"]).getTime();
+                end = mx.getDateFromTimestamp(mx.CACHE["ts-ev-end"]).getTime(),
+                srvTx = mx.getDateFromTimestamp(mx.CACHE["ts-srv-tx"]).getTime(),
+                cliRx = mx.getDateFromTimestamp(mx.CACHE["ts-cli-rx"]).getTime(),
+                delay = cliRx - srvTx;
+            start += delay;
+            end += delay;
             if(now >= start && now <= end){
                 mx.drawClickTable();
                 mx.styleSeBtnSave(mx.SE_CHANGES);

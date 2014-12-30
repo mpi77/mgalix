@@ -2,7 +2,7 @@
 /**
  * Generate example data.
  *
- * @version 1.4
+ * @version 1.5
  * @author MPI
  * */
 header("Content-Type: text/html; charset=utf-8");
@@ -11,8 +11,8 @@ $r1 = array (
                 "id" => 1,
                 "name" => "Wolf pit 2015",
                 "station" => null,
-                "ts-ev-start" => "2015-07-07 10:00:00",
-                "ts-ev-end" => "2015-07-07 13:00:00",
+                "ts-ev-start" => "2014-12-22 00:00:00",
+                "ts-ev-end" => "2015-02-22 13:00:00",
                 "ts-srv-tx" => null,
                 "ts-cli-rx" => null,
                 "gps" => array (
