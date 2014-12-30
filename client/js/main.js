@@ -1,7 +1,7 @@
 /**
  * mx main app script
  * 
- * @version 1.27
+ * @version 1.28
  * @author MPI
  */
 
@@ -398,9 +398,6 @@
             end += delay;
             if(now >= start && now <= end){
                 mx.drawClickTable();
-                mx.styleSeBtnSave(mx.SE_CHANGES);
-                mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
-                mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
             } else{
                 mx.setAlert("alert-danger", "Event is time blocked.");
                 $("#cont-se-clicker").html("<div id=\"se-time-restriction\">"
@@ -408,8 +405,12 @@
                         + "<p class=\"p-se-date\">" + mx.CACHE["ts-ev-start"] + "</p>"
                         + "<p class=\"p-se-date\">" + mx.CACHE["ts-ev-end"] + "</p>"
                         + "</div>");
-                return;
+                mx.SE_CHANGES = false;
+                mx.SE_CLICK_ORDER = 0;
             }
+            mx.styleSeBtnSave(mx.SE_CHANGES);
+            mx.styleSeBtnBack((mx.SE_CLICK_ORDER > 0));
+            mx.styleSeBtnRst((mx.SE_CLICK_ORDER > 0));
         }
     };
     
