@@ -1,7 +1,7 @@
 /*
  * mx main app script
  * 
- * @version 1.30
+ * @version 1.31
  * @author MPI
  */
 
@@ -307,8 +307,10 @@
         $("div[id^=pg-]").cls("hide", "remove");
         $("div[id^=pg-]").cls("hide", "add");
         $("#pg-" + page).cls("hide", "remove");
-        $("#navbar li").cls("active", "remove");
-        ($("#nv-"+page))[0].parentNode.className = "active";
+        if(page != "login"){
+            $("#navbar li").cls("active", "remove");
+            ($("#nv-"+page))[0].parentNode.className = "active";
+        }
         mx.stopLoader();
         
         // onload page handler
